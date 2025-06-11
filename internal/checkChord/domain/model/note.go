@@ -1,6 +1,5 @@
 package model
 
 type Note struct {
-	NoteNumber    int `json:"noteNumber"`
-	DegreeInChord int `json:"degreeInChord"`
+	LetterName string `json:"letterName"`
 }
