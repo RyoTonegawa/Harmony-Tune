@@ -1,16 +1,16 @@
 package service
 
 import (
+	"Harmony-Tune/internal/checkChord/domain/model"
 	"Harmony-Tune/internal/checkChord/domain/service"
 	"Harmony-Tune/internal/checkChord/presentation/models"
-	"fmt"
 )
 
-type ChordServiceInterface interface {
+type ChordCheckServiceInterface interface {
 }
 
-type ChordService struct {
-	noteservice       service.NoteServiceInterface
+type ChordCheckService struct {
+	noteService       service.NoteServiceInterface
 	scaleService      service.ScaleServiceInterface
 	chordService      service.ChordServiceInterface
 	responseConverter service.ResponseConverterInterface
@@ -21,39 +21,40 @@ func NewChordCheckService(
 	scaleSvc service.ScaleServiceInterface,
 	chordSvc service.ChordServiceInterface,
 	responseConverter service.ResponseConverterInterface,
-) *ChordService {
-	return &ChordService{
-		noteservice:       noteSvc,
+) *ChordCheckService {
+	return &ChordCheckService{
+		noteService:       noteSvc,
 		scaleService:      scaleSvc,
 		chordService:      chordSvc,
 		responseConverter: responseConverter,
 	}
 }
 
-func (s *ChordService) CheckAndTuneChord(
+func (s *ChordCheckService) CheckAndTuneChord(
 	req models.ChordCheckRequest,
-) (models.ChordCheckResponse, error) {
+) (model.ChordCheckResponse, error) {
 	// ノートナンバーを音名に変換
-	letterNameArray := s.noteservice.ConvertNoteNumberToLetterName(
+	letterNameArray := s.noteService.ConvertNoteNumberToLetterName(
 		req.NoteNumberArray,
 	)
+
 	// スケールの構成音を取得
 	scaleTones, err := s.scaleService.GetScaleTones(
 		&req.KeySignature,
 		&req.ScaleType)
 	if err != nil {
-		return models.ChordCheckResponse{}, err
+		return model.ChordCheckResponse{}, err
 	}
-	fmt.Println(len(scaleTones))
+
 	//　構成音からコードを特定
 	chords, err := s.chordService.DetermineChord(
 		letterNameArray,
 		scaleTones,
 	)
 	if err != nil {
-		return models.ChordCheckResponse{}, err
+		return model.ChordCheckResponse{}, err
 	}
-	fmt.Println(chords)
+
 	// レスポンスを作成
-	return s.responseConverter.Convert(chords)
+	return s.responseConverter.Convert(chords, scaleTones)
 }

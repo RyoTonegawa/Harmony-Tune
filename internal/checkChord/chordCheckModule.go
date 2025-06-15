@@ -13,7 +13,9 @@ func InitChordCheckModule(r *gin.RouterGroup) {
 	noteSvc := domainService.NewNoteService()
 	scaleSvc := domainService.NewScaleService()
 	chordSvc := domainService.NewChordService()
-	respConv := domainService.NewResponseConverter()
+	respConv := domainService.NewResponseConverter(
+		scaleSvc,
+	)
 	chordService := applicationService.NewChordCheckService(
 		noteSvc,
 		scaleSvc,

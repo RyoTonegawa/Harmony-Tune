@@ -35,6 +35,7 @@ func (s *ScaleService) IsChordWithInScale(
 	chord *model.Chord,
 	scaleToneArray []string,
 ) bool {
+
 	for _, eachChordTone := range chord.ChordToneArray {
 		if !slices.Contains(scaleToneArray, eachChordTone.LetterName) {
 			return false

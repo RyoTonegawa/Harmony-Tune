@@ -14,8 +14,8 @@ type ChordMasterDto struct {
 	Root      string `json:"root"`
 	ChordName string `json:"chord_name"`
 	// JsonとJsonRawの違いとは？JSON.parseされていないだけ？
-	Tones   []string `json:"tones"`
-	Degrees []string `json:"degrees"`
+	Tones   json.RawMessage `json:"tones"`
+	Degrees json.RawMessage `json:"degrees"`
 }
 
 type SupabaseChordMasterRepository struct {
@@ -93,6 +93,7 @@ func (r *SupabaseChordMasterRepository) GetChordMastersByExactTones(
 	// あらかじめサイズを確保することで append() よりパフォーマンスが良くなる
 	// ループで直接 s[i] = ... と代入できる
 	chordMasters := make([]model.Chord, len(chordMasterDtoArray))
+	fmt.Println(chordMasterDtoArray)
 	for i, chordMasterDto := range chordMasterDtoArray {
 		chordMasters[i] = r.convertChordMasterDtoToChord(chordMasterDto)
 	}
@@ -107,17 +108,16 @@ func (r *SupabaseChordMasterRepository) convertChordMasterDtoToChord(
 	// unmarshal と　marshalの違いとは？
 	// Marshal→ByteからGoの構造体
 	// Unmarshal→Goの構造体に変換
-	// json.Unmarshal(chordMasterDto.Tones, &toneArray)
-	// json.Unmarshal(chordMasterDto.Degrees, &degreeArray)
-
+	json.Unmarshal(chordMasterDto.Tones, &toneArray)
+	json.Unmarshal(chordMasterDto.Degrees, &degreeArray)
 	var chordTones []model.ChordTone
 	for i := range toneArray {
 		degree := ""
 		if i < len(degreeArray) {
-			degree = chordMasterDto.Degrees[i]
+			degree = degreeArray[i]
 		}
 		chordTones = append(chordTones, model.ChordTone{
-			LetterName: chordMasterDto.Tones[i],
+			LetterName: toneArray[i],
 			Degree:     degree,
 		})
 	}

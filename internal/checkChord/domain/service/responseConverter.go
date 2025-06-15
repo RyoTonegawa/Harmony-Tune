@@ -2,21 +2,50 @@ package service
 
 import (
 	"Harmony-Tune/internal/checkChord/domain/model"
-	"Harmony-Tune/internal/checkChord/presentation/models"
 )
 
-type ResponseConverter struct{}
+type ResponseConverter struct {
+	scaleSvc ScaleServiceInterface
+}
 type ResponseConverterInterface interface {
-	Convert(chords []model.Chord) (models.ChordCheckResponse, error)
+	Convert([]model.Chord, []string) (model.ChordCheckResponse, error)
 }
 
 var _ ResponseConverterInterface = (*ResponseConverter)(nil)
 
-func NewResponseConverter() *ResponseConverter {
-	return &ResponseConverter{}
+func NewResponseConverter(
+	scaleSvc ScaleServiceInterface,
+) *ResponseConverter {
+	return &ResponseConverter{
+		scaleSvc: scaleSvc,
+	}
 }
-func (r *ResponseConverter) Convert(chords []model.Chord) (
-	models.ChordCheckResponse, error,
+func (r *ResponseConverter) Convert(
+	chords []model.Chord,
+	scaleTones []string,
+) (
+	model.ChordCheckResponse, error,
 ) {
-	return models.ChordCheckResponse{}, nil
+
+	withinScale := make([]model.Chord, 0)
+	withoutScale := make([]model.Chord, 0)
+	for _, eachChord := range chords {
+		//ScaleSvcのメソッドにアクセスできない
+		if r.scaleSvc.IsChordWithInScale(
+			&eachChord,
+			scaleTones,
+		) {
+			//TrueならResponseのChordWithInScaleArray
+			withinScale = append(withinScale, eachChord)
+		} else {
+			// falseならChordWithoutScaleArray
+			withoutScale = append(withoutScale, eachChord)
+
+		}
+	}
+	response := model.ChordCheckResponse{
+		ChordWithInScaleArray:  withinScale,
+		ChordWithoutScaleArray: withoutScale,
+	}
+	return response, nil
 }

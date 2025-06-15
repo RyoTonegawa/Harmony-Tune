@@ -16,11 +16,11 @@ type ChordCheckHandlerInterface interface {
 var _ ChordCheckHandlerInterface = (*ChordCheckHandler)(nil)
 
 type ChordCheckHandler struct {
-	chordService *service.ChordService
+	chordService *service.ChordCheckService
 }
 
 func NewChordCheckHandler(
-	chordService *service.ChordService,
+	chordService *service.ChordCheckService,
 ) *ChordCheckHandler {
 	return &ChordCheckHandler{chordService: chordService}
 }
