@@ -9,13 +9,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type ChordCheckHandlerInterface interface {
+	Check(*gin.Context)
+}
+
+var _ ChordCheckHandlerInterface = (*ChordCheckHandler)(nil)
+
 type ChordCheckHandler struct {
-	chordCheckService *service.ChordCheckService
+	chordService *service.ChordService
 }
 
 func NewChordCheckHandler(
-	chordCheckService *service.ChordCheckService) *ChordCheckHandler {
-	return &ChordCheckHandler{chordCheckService: chordCheckService}
+	chordService *service.ChordService,
+) *ChordCheckHandler {
+	return &ChordCheckHandler{chordService: chordService}
 }
 
 func (h *ChordCheckHandler) Check(c *gin.Context) {
@@ -25,7 +32,7 @@ func (h *ChordCheckHandler) Check(c *gin.Context) {
 			gin.H{"error": err.Error()})
 		return
 	}
-	res, err := h.chordCheckService.CheckAndTuneChord(
+	res, err := h.chordService.CheckAndTuneChord(
 		req)
 	if err != nil {
 		c.JSON(

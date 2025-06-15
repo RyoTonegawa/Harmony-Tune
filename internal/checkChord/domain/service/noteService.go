@@ -1,8 +1,13 @@
 package service
 
-type NoteService struct {
-	letterNameList []string
+type NoteServiceInterface interface {
+	ConvertNoteNumberToLetterName([]int) []string
 }
+
+// IF通りの実装になっているかチェック
+var _ NoteServiceInterface = (*NoteService)(nil)
+
+type NoteService struct{}
 
 var mod12ToNoteName = map[int]string{
 	0:  "C",
@@ -24,10 +29,10 @@ func NewNoteService() *NoteService {
 }
 
 func (s *NoteService) ConvertNoteNumberToLetterName(
-	noteNumberList []int,
+	noteNumberArray []int,
 ) []string {
-	result := make([]string, len(noteNumberList))
-	for _, eachNoteNumber := range noteNumberList {
+	result := make([]string, len(noteNumberArray))
+	for _, eachNoteNumber := range noteNumberArray {
 		mod12 := eachNoteNumber % 12
 		if name, ok := mod12ToNoteName[mod12]; ok {
 			result = append(result, name)

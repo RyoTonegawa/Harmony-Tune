@@ -3,11 +3,12 @@ package models
 import "Harmony-Tune/internal/checkChord/domain/model"
 
 type ChordCheckRequest struct {
-	NoteNumberList []int  `json:"noteNumberList"`
-	KeySignature   string `json:"key"`
-	ScaleType      string `json:"scaleType"`
+	NoteNumberArray []int  `json:"noteNumberArray"`
+	KeySignature    string `json:"key"`
+	ScaleType       string `json:"scaleType"`
 }
 
 type ChordCheckResponse struct {
-	ChordList []model.Chord `json:"chordList"`
+	ChordWithInScaleArray  []model.Chord `json:"chordWithInScaleArray"`
+	ChordWithoutScaleArray []model.Chord `json:"chordWithoutScaleArray"`
 }

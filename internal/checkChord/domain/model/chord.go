@@ -1,8 +1,7 @@
 package model
 
 type Chord struct {
-	// コードの名前
-	ChordName      string      `json:"chordName"`
+	ChordRootNote  string      `json:"chordRootNote"`
 	ChordType      string      `json:"chordType"`
 	ChordToneArray []ChordTone `json:"chordToneArray"`
 }

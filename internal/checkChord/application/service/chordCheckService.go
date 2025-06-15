@@ -1,46 +1,56 @@
 package service
 
 import (
-	"Harmony-Tune/internal/checkChord/domain/model"
 	"Harmony-Tune/internal/checkChord/domain/service"
 	"Harmony-Tune/internal/checkChord/presentation/models"
 )
 
-type ChordCheckService struct {
-	noteservice  *service.NoteService
-	scaleService *service.ScaleService
-	chordService *service.ChordCheckService
+type ChordServiceInterface interface {
 }
 
-func NewChordCheckService() *ChordCheckService {
-	return &ChordCheckService{}
+type ChordService struct {
+	noteservice       service.NoteServiceInterface
+	scaleService      service.ScaleServiceInterface
+	chordService      service.ChordServiceInterface
+	responseConverter service.ResponseConverterInterface
 }
 
-func (s *ChordCheckService) CheckAndTuneChord(
+func NewChordCheckService(
+	noteSvc service.NoteServiceInterface,
+	scaleSvc service.ScaleServiceInterface,
+	chordSvc service.ChordServiceInterface,
+	responseConverter service.ResponseConverterInterface,
+) *ChordService {
+	return &ChordService{
+		noteservice:       noteSvc,
+		scaleService:      scaleSvc,
+		chordService:      chordSvc,
+		responseConverter: responseConverter,
+	}
+}
+
+func (s *ChordService) CheckAndTuneChord(
 	req models.ChordCheckRequest,
 ) (models.ChordCheckResponse, error) {
 	// ノートナンバーを音名に変換
-	letterNameList := s.noteservice.ConvertNoteNumberToLetterName(
-		req.NoteNumberList,
+	letterNameArray := s.noteservice.ConvertNoteNumberToLetterName(
+		req.NoteNumberArray,
 	)
 	// スケールの構成音を取得
-	scaleTones, error := s.scaleService.GetScaleTones(
-		req.KeySignature,
-		req.ScaleType)
-	//　構成音からコードを特定し、スケール内外のコードどちらかを判定
-	s.chordService.DetermineChord(letterNameList, scaleTones)
-	//特定したコードの構成音の詳細情報を作成
-
+	scaleTones, err := s.scaleService.GetScaleTones(
+		&req.KeySignature,
+		&req.ScaleType)
+	if err != nil {
+		return models.ChordCheckResponse{}, err
+	}
+	//　構成音からコードを特定
+	chords, err := s.chordService.DetermineChord(
+		letterNameArray,
+		scaleTones,
+	)
+	if err != nil {
+		return models.ChordCheckResponse{}, err
+	}
 	// レスポンスを作成
-	return models.ChordCheckResponse{
-		ChordList: []model.Chord{
-			{
-				ChordName: "C Major",
-				ChordType: "I Major",
-				ChordToneArray: []model.ChordTone{
-					{LetterName: "C", Degree: "1"},
-				},
-			},
-		},
-	}, nil
+	return s.responseConverter.Convert(chords)
 }
