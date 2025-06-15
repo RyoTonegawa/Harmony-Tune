@@ -1,0 +1,109 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/v1/chord/check": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "determine chord and tune",
+                "parameters": [
+                    {
+                        "description": "Note numbers and key info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ChordCheckRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.ChordCheckResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "model.Chord": {
+            "type": "object",
+            "properties": {
+                "chordRootNote": {
+                    "type": "string"
+                },
+                "chordToneArray": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.ChordTone"
+                    }
+                },
+                "chordType": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.ChordTone": {
+            "type": "object",
+            "properties": {
+                "degree": {
+                    "type": "string"
+                },
+                "letterName": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ChordCheckRequest": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "example": "C"
+                },
+                "noteNumberArray": {
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    },
+                    "example": [
+                        60,
+                        64,
+                        67
+                    ]
+                },
+                "scaleType": {
+                    "type": "string",
+                    "example": "Major"
+                }
+            }
+        },
+        "models.ChordCheckResponse": {
+            "type": "object",
+            "properties": {
+                "chordWithInScaleArray": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Chord"
+                    }
+                },
+                "chordWithoutScaleArray": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Chord"
+                    }
+                }
+            }
+        }
+    }
+}

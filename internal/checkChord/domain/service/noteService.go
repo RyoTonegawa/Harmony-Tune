@@ -31,7 +31,7 @@ func NewNoteService() *NoteService {
 func (s *NoteService) ConvertNoteNumberToLetterName(
 	noteNumberArray []int,
 ) []string {
-	result := make([]string, len(noteNumberArray))
+	result := make([]string, 0, len(noteNumberArray))
 	for _, eachNoteNumber := range noteNumberArray {
 		mod12 := eachNoteNumber % 12
 		if name, ok := mod12ToNoteName[mod12]; ok {

@@ -1,0 +1,70 @@
+definitions:
+  model.Chord:
+    properties:
+      chordRootNote:
+        type: string
+      chordToneArray:
+        items:
+          $ref: '#/definitions/model.ChordTone'
+        type: array
+      chordType:
+        type: string
+    type: object
+  model.ChordTone:
+    properties:
+      degree:
+        type: string
+      letterName:
+        type: string
+    type: object
+  models.ChordCheckRequest:
+    properties:
+      key:
+        example: C
+        type: string
+      noteNumberArray:
+        example:
+        - 60
+        - 64
+        - 67
+        items:
+          type: integer
+        type: array
+      scaleType:
+        example: Major
+        type: string
+    type: object
+  models.ChordCheckResponse:
+    properties:
+      chordWithInScaleArray:
+        items:
+          $ref: '#/definitions/model.Chord'
+        type: array
+      chordWithoutScaleArray:
+        items:
+          $ref: '#/definitions/model.Chord'
+        type: array
+    type: object
+info:
+  contact: {}
+paths:
+  /v1/chord/check:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Note numbers and key info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.ChordCheckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ChordCheckResponse'
+      summary: determine chord and tune
+swagger: "2.0"
