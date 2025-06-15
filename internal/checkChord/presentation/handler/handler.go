@@ -25,6 +25,7 @@ func NewChordCheckHandler(
 	return &ChordCheckHandler{chordService: chordService}
 }
 
+// @Tags chord
 // @Summary determine chord and tune
 // @Accept json
 // @Produce json

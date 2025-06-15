@@ -12,6 +12,9 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "chord"
+                ],
                 "summary": "determine chord and tune",
                 "parameters": [
                     {

@@ -67,4 +67,6 @@ paths:
           schema:
             $ref: '#/definitions/models.ChordCheckResponse'
       summary: determine chord and tune
+      tags:
+      - chord
 swagger: "2.0"
