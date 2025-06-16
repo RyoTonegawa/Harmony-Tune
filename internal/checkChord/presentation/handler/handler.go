@@ -31,7 +31,7 @@ func NewChordCheckHandler(
 // @Produce json
 // @Router /v1/chord/check [post]
 // @Param request body models.ChordCheckRequest true "Note numbers and key info"
-// @Success 200 {object} models.ChordCheckResponse
+// @Success 200 {object} model.ChordCheckResponse
 func (h *ChordCheckHandler) Check(c *gin.Context) {
 	var req models.ChordCheckRequest
 	if err := c.ShouldBindJSON(&req); err != nil {

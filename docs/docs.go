@@ -42,7 +42,7 @@ const docTemplate = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/models.ChordCheckResponse"
+                            "$ref": "#/definitions/model.ChordCheckResponse"
                         }
                     }
                 }
@@ -67,14 +67,44 @@ const docTemplate = `{
                 }
             }
         },
+        "model.ChordCheckResponse": {
+            "type": "object",
+            "properties": {
+                "chordWithInScaleArray": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Chord"
+                    }
+                },
+                "chordWithoutScaleArray": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.Chord"
+                    }
+                }
+            }
+        },
         "model.ChordTone": {
             "type": "object",
             "properties": {
                 "degree": {
-                    "type": "string"
+                    "$ref": "#/definitions/model.Degree"
                 },
                 "letterName": {
                     "type": "string"
+                }
+            }
+        },
+        "model.Degree": {
+            "type": "object",
+            "properties": {
+                "centsFromEqualToJust": {
+                    "type": "number",
+                    "example": -14
+                },
+                "degreeName": {
+                    "type": "string",
+                    "example": "長3度"
                 }
             }
         },
@@ -101,34 +131,17 @@ const docTemplate = `{
                     "example": "Major"
                 }
             }
-        },
-        "models.ChordCheckResponse": {
-            "type": "object",
-            "properties": {
-                "chordWithInScaleArray": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Chord"
-                    }
-                },
-                "chordWithoutScaleArray": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.Chord"
-                    }
-                }
-            }
         }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.0",
+	Version:          "",
 	Host:             "",
-	BasePath:         "/",
+	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "HarmonyTuneAPI",
+	Title:            "",
 	Description:      "",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

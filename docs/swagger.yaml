@@ -10,11 +10,31 @@ definitions:
       chordType:
         type: string
     type: object
+  model.ChordCheckResponse:
+    properties:
+      chordWithInScaleArray:
+        items:
+          $ref: '#/definitions/model.Chord'
+        type: array
+      chordWithoutScaleArray:
+        items:
+          $ref: '#/definitions/model.Chord'
+        type: array
+    type: object
   model.ChordTone:
     properties:
       degree:
-        type: string
+        $ref: '#/definitions/model.Degree'
       letterName:
+        type: string
+    type: object
+  model.Degree:
+    properties:
+      centsFromEqualToJust:
+        example: -14
+        type: number
+      degreeName:
+        example: 長3度
         type: string
     type: object
   models.ChordCheckRequest:
@@ -33,17 +53,6 @@ definitions:
       scaleType:
         example: Major
         type: string
-    type: object
-  models.ChordCheckResponse:
-    properties:
-      chordWithInScaleArray:
-        items:
-          $ref: '#/definitions/model.Chord'
-        type: array
-      chordWithoutScaleArray:
-        items:
-          $ref: '#/definitions/model.Chord'
-        type: array
     type: object
 info:
   contact: {}
@@ -65,7 +74,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/models.ChordCheckResponse'
+            $ref: '#/definitions/model.ChordCheckResponse'
       summary: determine chord and tune
       tags:
       - chord
